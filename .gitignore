@@ -1,0 +1,13 @@
+# build output (run: node build.js)
+dist/
+node_modules/
+
+# regenerable working files
+brand/fonts/tools/work/
+brand/3d/renders/spin/
+brand/3d/renders/turntable/
+__pycache__/
+*.blend1
+
+# local tooling
+.claude/
