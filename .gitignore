@@ -11,3 +11,19 @@ __pycache__/
 
 # local tooling
 .claude/
+
+# engineer reference photos and animation frames (not for the repo)
+brand/team/photos/
+resources/
+brand/3d/team/renders/*/
+
+# shelved 3D engineer characters (kept locally; full history on the full-history branch)
+brand/3d/team/
+brand/3d/tools/build_team*.py
+brand/3d/tools/make_team_anim.py
+brand/3d/tools/render_team_real.py
+brand/3d/tools/scan_rig.py
+brand/3d/tools/recolor_shirt.py
+brand/3d/tools/rework_arms.py
+brand/3d/tools/export_glb.py
+brand/3d/tools/prep_head.py
