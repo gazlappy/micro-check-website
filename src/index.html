@@ -33,10 +33,10 @@
     <nav class="nav" id="nav" aria-label="Main">
       <a href="#services">Services</a>
       <a href="#shop">Shop</a>
-      <a href="#prices">Prices</a>
+      <a href="#bring-it-in">Bring it in</a>
       <a href="#about">About</a>
       <a href="#contact">Contact</a>
-      <a class="btn btn-primary nav-call" href="{{phoneHref}}">{{icon:phone}} {{phone}}</a>
+      <a class="btn btn-primary nav-call" href="#bring-it-in">{{icon:pin}} Bring it in</a>
     </nav>
   </div>
 </header>
@@ -50,7 +50,7 @@
         <h1>Computer and phone repairs you can rely on.</h1>
         <p class="lead">Phones, laptops, PCs and games consoles repaired in our own workshop, with many phone repairs done in as little as an hour. New and refurbished computers, printer ink and accessories in the showroom. Clear advice, fair prices, no hidden extras.</p>
         <div class="btn-row">
-          <a class="btn btn-primary" href="{{phoneHref}}">{{icon:phone}} Call {{phone}}</a>
+          <a class="btn btn-primary" href="#bring-it-in">{{icon:pin}} Bring it in</a>
           <a class="btn btn-ghost" href="#services">Our services</a>
         </div>
         <p class="status" data-open-status>Mon–Fri 9:30am–5:30pm · Sat 10am–1pm</p>
@@ -158,25 +158,48 @@
     </div>
   </section>
 
-  <section class="section" id="prices">
-    <div class="wrap split">
+  <section class="section" id="bring-it-in">
+    <div class="wrap">
       <header class="section-head">
-        <p class="eyebrow">Prices</p>
-        <h2>Straightforward pricing</h2>
-        <p>You always get a diagnosis and a price before we start any work. You pay once you're happy it's working.</p>
-        <a class="btn btn-ghost" href="{{phoneHref}}">{{icon:phone}} Ask for a quote</a>
+        <p class="eyebrow">Bring it in</p>
+        <h2>The quickest way to get it fixed</h2>
+        <p>Almost every fault needs to be seen in person, so the best thing to do is bring it to the shop. We'll take a look and tell you what's wrong and what it will cost before we touch it.</p>
       </header>
-      <!-- PRICE: add real repair prices in these rows -->
-      <table class="price-table">
-        <tbody>
-          <tr><th scope="row">Phone repair</th><td>Quoted first</td><td>Many repairs done in as little as an hour.</td></tr>
-          <tr><th scope="row">Computer repair</th><td>Quoted first</td><td>Typically back to you in 1–3 days.</td></tr>
-          <tr><th scope="row">Help at the counter</th><td>Sensible fees</td><td>Quick help with settings, accounts and set-up while you wait.</td></tr>
-          <tr><th scope="row">Upgrades</th><td>Per job</td><td>Often far cheaper than a new computer.</td></tr>
-          <tr><th scope="row">Trade-in</th><td>Valued on the spot</td><td>Old equipment against an upgrade or purchase.</td></tr>
-          <tr><th scope="row">Collect &amp; return</th><td>On request</td><td>Under special circumstances. Ask us for a price.</td></tr>
-        </tbody>
-      </table>
+      <ol class="visit">
+        <li>
+          <span class="visit-n">1</span>
+          <h3>Drop it in</h3>
+          <p>Bring it to the shop on Longforth Road during opening hours. You'll find us on the Shell garage forecourt.</p>
+        </li>
+        <li>
+          <span class="visit-n">2</span>
+          <h3>We take a look</h3>
+          <p>We find the fault and give you a price before any work starts. Nothing is done without your go-ahead.</p>
+        </li>
+        <li>
+          <span class="visit-n">3</span>
+          <h3>Collect it fixed</h3>
+          <p>Many phone repairs are ready in about an hour. Computers are typically back with you in 1–3 days.</p>
+        </li>
+      </ol>
+      <div class="visit-extra">
+        <div class="visit-bring">
+          <h3>What to bring</h3>
+          <ul class="ticks">
+            <li>The device, plus its charger or power lead</li>
+            <li>Your passcode, PIN or login, so we can test it properly</li>
+            <li>Any accessories involved, like a case or memory card</li>
+            <li>If it still works, a backup of anything you can't lose</li>
+          </ul>
+        </div>
+        <div class="visit-find">
+          <h3>Find the shop</h3>
+          <address>The Showroom, Longforth Road<br>Wellington, Somerset TA21 8RQ</address>
+          <p class="visit-hours">Mon–Fri 9:30am–5:30pm · Sat 10am–1pm</p>
+          <p class="status" data-open-status></p>
+          <a class="btn btn-primary" href="{{mapsLink}}" target="_blank" rel="noopener">{{icon:pin}} Get directions</a>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -197,7 +220,7 @@
       <div>
         <h3 class="steps-title">How a repair works</h3>
         <ol class="steps">
-          <li><b>Tell us the problem</b>Call or drop in to the shop.</li>
+          <li><b>Bring it in</b>Drop it in to the shop and tell us the problem.</li>
           <li><b>We diagnose it</b>We explain your options and the cost.</li>
           <li><b>We fix it</b>With your go-ahead, usually within 1–3 days. Many phones in an hour.</li>
           <li><b>You pay</b>Satisfaction guaranteed.</li>
@@ -210,11 +233,11 @@
     <div class="wrap cta-inner">
       <div>
         <h2>Cracked screen or slow laptop?</h2>
-        <p>Bring it in or give us a call. Many phone repairs are done in about an hour, and you always get a price before we start.</p>
+        <p>Bring it in and we'll take a look. Many phone repairs are done in about an hour, and you always get a price before we start.</p>
       </div>
       <div class="btn-row">
-        <a class="btn btn-primary" href="{{phoneHref}}">{{icon:phone}} Call {{phone}}</a>
-        <a class="btn btn-ghost" href="{{mapsLink}}" target="_blank" rel="noopener">{{icon:pin}} Get directions</a>
+        <a class="btn btn-primary" href="{{mapsLink}}" target="_blank" rel="noopener">{{icon:pin}} Get directions</a>
+        <a class="btn btn-ghost" href="#bring-it-in">What to bring</a>
       </div>
     </div>
   </section>
