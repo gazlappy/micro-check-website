@@ -1,0 +1,66 @@
+// Printer → cartridge lookup for the ink finder. UK cartridge codes for popular home and office printers.
+// Each entry: brand, cartridge set name, the cartridges in it, and the printer models that take it.
+// To add a printer: find its cartridge set below and add the model to `models` (as printed on the printer).
+window.INK_DATA = [
+  // ---------------- HP inkjet
+  { brand: 'HP', name: 'HP 305 / 305XL', carts: ['HP 305 Black', 'HP 305 Tri-colour', 'HP 305XL Black (high yield)', 'HP 305XL Tri-colour (high yield)'],
+    models: ['DeskJet 2710', 'DeskJet 2720', 'DeskJet 2721', 'DeskJet 2722', 'DeskJet 2723', 'DeskJet 2724', 'DeskJet 2755', 'DeskJet Plus 4120', 'DeskJet Plus 4130', 'Envy 6020', 'Envy 6030', 'Envy 6032', 'Envy 6055', 'Envy 6420', 'Envy 6430'] },
+  { brand: 'HP', name: 'HP 304 / 304XL', carts: ['HP 304 Black', 'HP 304 Tri-colour', 'HP 304XL Black (high yield)', 'HP 304XL Tri-colour (high yield)'],
+    models: ['DeskJet 2620', 'DeskJet 2630', 'DeskJet 2632', 'DeskJet 2633', 'DeskJet 2634', 'DeskJet 3720', 'DeskJet 3730', 'DeskJet 3750', 'DeskJet 3760', 'Envy 5010', 'Envy 5020', 'Envy 5030', 'Envy 5032'] },
+  { brand: 'HP', name: 'HP 302 / 302XL', carts: ['HP 302 Black', 'HP 302 Tri-colour', 'HP 302XL Black (high yield)', 'HP 302XL Tri-colour (high yield)'],
+    models: ['DeskJet 1110', 'DeskJet 2130', 'DeskJet 2132', 'DeskJet 3630', 'DeskJet 3632', 'DeskJet 3634', 'DeskJet 3636', 'DeskJet 3637', 'DeskJet 3639', 'Envy 4520', 'Envy 4522', 'Envy 4524', 'Envy 4527', 'OfficeJet 3830', 'OfficeJet 3831', 'OfficeJet 3833', 'OfficeJet 4650', 'OfficeJet 4654', 'OfficeJet 4655', 'OfficeJet 4657'] },
+  { brand: 'HP', name: 'HP 301 / 301XL', carts: ['HP 301 Black', 'HP 301 Tri-colour', 'HP 301XL Black (high yield)', 'HP 301XL Tri-colour (high yield)'],
+    models: ['DeskJet 1050', 'DeskJet 1510', 'DeskJet 2050', 'DeskJet 2540', 'DeskJet 3050', 'Envy 4500', 'Envy 5530', 'OfficeJet 2620', 'OfficeJet 4630'] },
+  { brand: 'HP', name: 'HP 62 / 62XL', carts: ['HP 62 Black', 'HP 62 Tri-colour', 'HP 62XL Black (high yield)', 'HP 62XL Tri-colour (high yield)'],
+    models: ['Envy 5540', 'Envy 5640', 'Envy 7640', 'OfficeJet 5740', 'OfficeJet 5742', 'OfficeJet 200', 'OfficeJet 250'] },
+  { brand: 'HP', name: 'HP 303 / 303XL', carts: ['HP 303 Black', 'HP 303 Tri-colour', 'HP 303XL Black (high yield)', 'HP 303XL Tri-colour (high yield)'],
+    models: ['Envy Photo 6220', 'Envy Photo 6230', 'Envy Photo 6232', 'Envy Photo 6234', 'Envy Photo 7130', 'Envy Photo 7134', 'Envy Photo 7830'] },
+  { brand: 'HP', name: 'HP 953 / 953XL', carts: ['HP 953 Black', 'HP 953 Cyan', 'HP 953 Magenta', 'HP 953 Yellow', 'XL (high yield) versions of each'],
+    models: ['OfficeJet Pro 7720', 'OfficeJet Pro 7730', 'OfficeJet Pro 7740', 'OfficeJet Pro 8210', 'OfficeJet Pro 8710', 'OfficeJet Pro 8715', 'OfficeJet Pro 8720', 'OfficeJet Pro 8730', 'OfficeJet Pro 8740'] },
+  { brand: 'HP', name: 'HP 963 / 963XL', carts: ['HP 963 Black', 'HP 963 Cyan', 'HP 963 Magenta', 'HP 963 Yellow', 'XL (high yield) versions of each'],
+    models: ['OfficeJet Pro 9010', 'OfficeJet Pro 9012', 'OfficeJet Pro 9013', 'OfficeJet Pro 9014', 'OfficeJet Pro 9015', 'OfficeJet Pro 9016', 'OfficeJet Pro 9019', 'OfficeJet Pro 9020', 'OfficeJet Pro 9022', 'OfficeJet Pro 9025'] },
+  { brand: 'HP', name: 'HP 912 / 912XL', carts: ['HP 912 Black', 'HP 912 Cyan', 'HP 912 Magenta', 'HP 912 Yellow', 'HP 912XL Black (high yield)'],
+    models: ['OfficeJet 8010', 'OfficeJet 8012', 'OfficeJet 8013', 'OfficeJet 8014', 'OfficeJet 8015', 'OfficeJet Pro 8022', 'OfficeJet Pro 8024', 'OfficeJet Pro 8025'] },
+  { brand: 'HP', name: 'HP 950 / 951', carts: ['HP 950 Black', 'HP 951 Cyan', 'HP 951 Magenta', 'HP 951 Yellow', 'XL (high yield) versions of each'],
+    models: ['OfficeJet Pro 8100', 'OfficeJet Pro 8600', 'OfficeJet Pro 8610', 'OfficeJet Pro 8615', 'OfficeJet Pro 8620', 'OfficeJet Pro 8630', 'OfficeJet Pro 251dw', 'OfficeJet Pro 276dw'] },
+
+  // ---------------- Canon
+  { brand: 'Canon', name: 'Canon PG-545 / CL-546', carts: ['PG-545 Black', 'CL-546 Colour', 'PG-545XL Black (high yield)', 'CL-546XL Colour (high yield)'],
+    models: ['PIXMA MG2450', 'PIXMA MG2550', 'PIXMA MG2550S', 'PIXMA MG2950', 'PIXMA MG3050', 'PIXMA MG3051', 'PIXMA MG3052', 'PIXMA MG3053', 'PIXMA MX495', 'PIXMA TS3150', 'PIXMA TS3151', 'PIXMA TS3350', 'PIXMA TS3351', 'PIXMA TS3352', 'PIXMA TS3355', 'PIXMA TR4550', 'PIXMA TR4551', 'PIXMA TS205', 'PIXMA iP2850'] },
+  { brand: 'Canon', name: 'Canon PG-540 / CL-541', carts: ['PG-540 Black', 'CL-541 Colour', 'PG-540XL Black (high yield)', 'CL-541XL Colour (high yield)'],
+    models: ['PIXMA MG2150', 'PIXMA MG2250', 'PIXMA MG3150', 'PIXMA MG3250', 'PIXMA MG3550', 'PIXMA MG3650', 'PIXMA MG4150', 'PIXMA MG4250', 'PIXMA MX375', 'PIXMA MX395', 'PIXMA MX435', 'PIXMA MX455', 'PIXMA MX475', 'PIXMA MX515', 'PIXMA MX525', 'PIXMA MX535', 'PIXMA TS5150', 'PIXMA TS5151'] },
+  { brand: 'Canon', name: 'Canon PG-560 / CL-561', carts: ['PG-560 Black', 'CL-561 Colour', 'PG-560XL Black (high yield)', 'CL-561XL Colour (high yield)'],
+    models: ['PIXMA TS5350', 'PIXMA TS5351', 'PIXMA TS5352', 'PIXMA TS5353', 'PIXMA TS5355', 'PIXMA TS7350', 'PIXMA TS7450', 'PIXMA TS7451'] },
+  { brand: 'Canon', name: 'Canon PG-575 / CL-576', carts: ['PG-575 Black', 'CL-576 Colour', 'PG-575XL Black (high yield)', 'CL-576XL Colour (high yield)'],
+    models: ['PIXMA TS3550i', 'PIXMA TS3551i', 'PIXMA TR4750i'] },
+  { brand: 'Canon', name: 'Canon PGI-580 / CLI-581', carts: ['PGI-580 Pigment Black', 'CLI-581 Black', 'CLI-581 Cyan', 'CLI-581 Magenta', 'CLI-581 Yellow', 'XL versions of each (some models also take CLI-581 Photo Blue)'],
+    models: ['PIXMA TS6150', 'PIXMA TS6250', 'PIXMA TS6350', 'PIXMA TS705', 'PIXMA TS8150', 'PIXMA TS8250', 'PIXMA TS8350', 'PIXMA TS9150', 'PIXMA TR7550', 'PIXMA TR8550'] },
+  { brand: 'Canon', name: 'Canon PGI-570 / CLI-571', carts: ['PGI-570 Pigment Black', 'CLI-571 Black', 'CLI-571 Cyan', 'CLI-571 Magenta', 'CLI-571 Yellow', 'XL versions of each (some models also take CLI-571 Grey)'],
+    models: ['PIXMA MG5750', 'PIXMA MG5751', 'PIXMA MG6850', 'PIXMA MG7750', 'PIXMA TS5050', 'PIXMA TS5055', 'PIXMA TS6050', 'PIXMA TS8050', 'PIXMA TS9050'] },
+
+  // ---------------- Epson
+  { brand: 'Epson', name: 'Epson 603 / 603XL "Starfish"', carts: ['603 Black', '603 Cyan', '603 Magenta', '603 Yellow', '603XL (high yield) versions of each'],
+    models: ['Expression Home XP-2100', 'Expression Home XP-2105', 'Expression Home XP-3100', 'Expression Home XP-3105', 'Expression Home XP-4100', 'Expression Home XP-4105', 'WorkForce WF-2810', 'WorkForce WF-2830', 'WorkForce WF-2835', 'WorkForce WF-2850'] },
+  { brand: 'Epson', name: 'Epson 604 / 604XL "Pineapple"', carts: ['604 Black', '604 Cyan', '604 Magenta', '604 Yellow', '604XL (high yield) versions of each'],
+    models: ['Expression Home XP-2200', 'Expression Home XP-2205', 'Expression Home XP-3200', 'Expression Home XP-3205', 'Expression Home XP-4200', 'Expression Home XP-4205', 'WorkForce WF-2910', 'WorkForce WF-2930', 'WorkForce WF-2935', 'WorkForce WF-2950'] },
+  { brand: 'Epson', name: 'Epson 502 / 502XL "Binoculars"', carts: ['502 Black', '502 Cyan', '502 Magenta', '502 Yellow', '502XL (high yield) versions of each'],
+    models: ['Expression Home XP-5100', 'Expression Home XP-5105', 'WorkForce WF-2860', 'WorkForce WF-2865'] },
+  { brand: 'Epson', name: 'Epson 29 / 29XL "Strawberry"', carts: ['29 Black', '29 Cyan', '29 Magenta', '29 Yellow', '29XL (high yield) versions of each'],
+    models: ['Expression Home XP-235', 'Expression Home XP-245', 'Expression Home XP-247', 'Expression Home XP-332', 'Expression Home XP-335', 'Expression Home XP-342', 'Expression Home XP-345', 'Expression Home XP-432', 'Expression Home XP-435', 'Expression Home XP-442', 'Expression Home XP-445'] },
+  { brand: 'Epson', name: 'Epson 18 / 18XL "Daisy"', carts: ['18 Black', '18 Cyan', '18 Magenta', '18 Yellow', '18XL (high yield) versions of each'],
+    models: ['Expression Home XP-30', 'Expression Home XP-102', 'Expression Home XP-202', 'Expression Home XP-205', 'Expression Home XP-212', 'Expression Home XP-215', 'Expression Home XP-225', 'Expression Home XP-305', 'Expression Home XP-322', 'Expression Home XP-325', 'Expression Home XP-402', 'Expression Home XP-405', 'Expression Home XP-422', 'Expression Home XP-425'] },
+  { brand: 'Epson', name: 'Epson 202 / 202XL "Kiwi"', carts: ['202 Black', '202 Photo Black', '202 Cyan', '202 Magenta', '202 Yellow', '202XL (high yield) versions of each'],
+    models: ['Expression Premium XP-6000', 'Expression Premium XP-6005', 'Expression Premium XP-6100', 'Expression Premium XP-6105'] },
+  { brand: 'Epson', name: 'Epson 378 / 378XL "Squirrel"', carts: ['378 Black', '378 Cyan', '378 Magenta', '378 Yellow', '378 Light Cyan', '378 Light Magenta', '378XL (high yield) versions of each'],
+    models: ['Expression Photo XP-8500', 'Expression Photo XP-8505', 'Expression Photo XP-8600', 'Expression Photo XP-8605'] },
+
+  // ---------------- Brother
+  { brand: 'Brother', name: 'Brother LC3211 / LC3213', carts: ['LC3211 Black, Cyan, Magenta, Yellow', 'LC3213 (high yield) Black, Cyan, Magenta, Yellow'],
+    models: ['DCP-J572DW', 'DCP-J772DW', 'DCP-J774DW', 'MFC-J491DW', 'MFC-J497DW', 'MFC-J890DW', 'MFC-J895DW'] },
+  { brand: 'Brother', name: 'Brother LC421', carts: ['LC421 Black, Cyan, Magenta, Yellow', 'LC421XL (high yield) versions of each'],
+    models: ['DCP-J1050DW', 'DCP-J1140DW', 'MFC-J1010DW'] },
+  { brand: 'Brother', name: 'Brother LC3217 / LC3219XL', carts: ['LC3217 Black, Cyan, Magenta, Yellow', 'LC3219XL (high yield) Black, Cyan, Magenta, Yellow'],
+    models: ['MFC-J5330DW', 'MFC-J5335DW', 'MFC-J5730DW', 'MFC-J6530DW', 'MFC-J6930DW', 'MFC-J6935DW'] },
+  { brand: 'Brother', name: 'Brother TN-2410 / TN-2420 toner', carts: ['TN-2410 Black toner', 'TN-2420 Black toner (high yield)', 'DR-2400 Drum unit (replaced less often)'],
+    models: ['HL-L2310D', 'HL-L2350DW', 'HL-L2370DN', 'HL-L2375DW', 'DCP-L2510D', 'DCP-L2530DW', 'DCP-L2550DN', 'MFC-L2710DW', 'MFC-L2730DW', 'MFC-L2750DW'] },
+];

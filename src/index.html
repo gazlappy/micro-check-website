@@ -149,10 +149,26 @@
       <div class="shop-grid">
         <div class="shop-item">{{icon:laptop}}<div><h3>PCs &amp; laptops</h3><p>New and refurbished. Refurbished can save you hundreds.</p></div></div>
         <div class="shop-item">{{icon:monitor}}<div><h3>Built to order</h3><p>Tell us what it's for and we build it on site.</p></div></div>
-        <div class="shop-item">{{icon:printer}}<div><h3>Printer ink</h3><p>A large range of inks and cartridges, plus refill kits.</p></div></div>
+        <div class="shop-item">{{icon:printer}}<div><h3>Printer ink</h3><p>A large range of inks and cartridges, plus refill kits.</p><a class="ink-link" href="#ink-finder" data-ink-open>{{icon:search}} Find my ink</a></div></div>
         <div class="shop-item">{{icon:drive}}<div><h3>Parts &amp; storage</h3><p>Graphics cards, memory, hard drives, SSDs and USB sticks.</p></div></div>
         <div class="shop-item">{{icon:wifi}}<div><h3>Peripherals</h3><p>Mice, keyboards, cables, routers and homeplugs.</p></div></div>
         <div class="shop-item">{{icon:phoneDevice}}<div><h3>Phone accessories</h3><p>Chargers, cables, cases and more.</p></div></div>
+      </div>
+      <div class="ink-finder" id="ink-finder">
+        <div class="ink-head">
+          <span class="card-ico">{{icon:printer}}</span>
+          <div>
+            <h3>Ink finder</h3>
+            <p>Type your printer's model to see which cartridges it takes. The model is usually printed on the front, or under the lid.</p>
+          </div>
+        </div>
+        <form class="ink-form" data-ink-form role="search">
+          <label class="sr" for="ink-q">Printer model</label>
+          <input id="ink-q" name="q" type="search" autocomplete="off" placeholder="e.g. HP DeskJet 2720, Canon TS5050, Epson XP-2100" data-ink-q>
+          <button class="btn btn-primary" type="submit">{{icon:search}} Find ink</button>
+        </form>
+        <div class="ink-results" data-ink-results aria-live="polite"></div>
+        <noscript><p>Tell us your printer's make and model on {{phone}} or by email and we'll check the cartridges for you.</p></noscript>
       </div>
       <p class="brands">Acer · HP · Lenovo · Microsoft · Toshiba · Canon · Epson · and many more. New equipment comes with at least one year's manufacturer's warranty.</p>
     </div>
@@ -314,6 +330,7 @@
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" defer></script>
+<script src="assets/ink.js" defer></script>
 <script src="assets/site.js" defer></script>
 </body>
 </html>

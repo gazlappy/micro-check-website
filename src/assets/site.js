@@ -58,4 +58,64 @@
       .addTo(map)
       .bindPopup('<b>Micro-Check Computers</b><br>The Showroom, Longforth Road<br>Wellington TA21 8RQ');
   }
+
+  // Ink finder: match a typed printer model against INK_DATA (assets/ink.js)
+  const inkForm = document.querySelector('[data-ink-form]');
+  if (inkForm && window.INK_DATA) {
+    const q = inkForm.querySelector('[data-ink-q]');
+    const out = document.querySelector('[data-ink-results]');
+    const emailLink = document.querySelector('a[href^="mailto:"]');
+    const mail = emailLink ? emailLink.getAttribute('href').split('?')[0] : '';
+    const norm = (t) => t.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const esc = (t) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const brands = ['hp', 'canon', 'epson', 'brother'];
+    const otherBrands = ['kodak', 'lexmark', 'samsung', 'xerox', 'ricoh', 'kyocera', 'dell', 'oki', 'sharp', 'panasonic', 'konica'];
+    const index = [];
+    window.INK_DATA.forEach((set) => set.models.forEach((m) => {
+      const full = `${set.brand} ${m}`;
+      const code = m.split(' ').pop();   // e.g. "2720", "XP-2100", "TS5050", "MFC-J491DW"
+      index.push({ set, model: full, key: norm(full), code: norm(code) });
+    }));
+
+    function search(text) {
+      const t = norm(text);
+      if (t.length < 3) return [];
+      const words = text.toLowerCase().split(/\s+/).map(norm).filter(Boolean);
+      if (otherBrands.includes(words[0])) return [];
+      const brand = brands.find((b) => t.startsWith(b));
+      const bare = brand ? t.slice(brand.length) : t;
+      // whole words of the query, and neighbouring pairs ("XP 4105" -> "xp4105"), compared with each model code
+      const parts = words.concat(words.slice(1).map((w, i) => words[i] + w));
+      const hits = index.filter((e) => (!brand || e.key.startsWith(brand)) &&
+        (e.key.includes(bare) || parts.some((w) => w === e.code || (w.length >= 4 && /\d/.test(w) && e.code.includes(w)))));
+      // one result per cartridge set, closest model names first
+      const bySet = new Map();
+      hits.sort((a, b) => (b.code === bare) - (a.code === bare) || a.model.length - b.model.length).forEach((e) => {
+        if (!bySet.has(e.set)) bySet.set(e.set, []);
+        bySet.get(e.set).push(e.model);
+      });
+      return [...bySet.entries()].slice(0, 4);
+    }
+
+    function render(text) {
+      if (!text) { out.innerHTML = ''; return; }
+      const found = search(text);
+      if (!found.length) {
+        out.innerHTML = `<div class="ink-none"><p><b>We couldn't find "${esc(text)}" in our list.</b> Check the model on the printer, or ask us. We stock cartridges for far more printers than are listed here.</p>` +
+          (mail ? `<a class="btn btn-ghost" href="${mail}?subject=${encodeURIComponent('Ink for ' + text)}">Ask us about ink for this printer</a>` : '') + '</div>';
+        return;
+      }
+      out.innerHTML = found.map(([set, models]) => `
+        <div class="ink-card">
+          <p class="ink-for">${esc(models.slice(0, 3).join(', '))}${models.length > 3 ? ' and similar' : ''}</p>
+          <h4>${esc(set.name)}</h4>
+          <ul class="ticks">${set.carts.map((c) => `<li>${esc(c)}</li>`).join('')}</ul>
+          ${mail ? `<a class="btn btn-ghost" href="${mail}?subject=${encodeURIComponent('Ink: ' + set.name)}&body=${encodeURIComponent('Hi, do you have ' + set.name + ' in stock for my ' + models[0] + '?')}">Check it's in stock</a>` : ''}
+        </div>`).join('') +
+        '<p class="ink-note">Pop in to buy, or email us to check stock first. XL cartridges cost a little more but print far more pages. Please check the code against your old cartridge before buying.</p>';
+    }
+
+    inkForm.addEventListener('submit', (e) => { e.preventDefault(); render(q.value.trim()); });
+    document.querySelectorAll('[data-ink-open]').forEach((a) => a.addEventListener('click', () => setTimeout(() => q.focus(), 300)));
+  }
 })();
