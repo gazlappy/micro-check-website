@@ -59,7 +59,8 @@
       .bindPopup('<b>Micro-Check Computers</b><br>The Showroom, Longforth Road<br>Wellington TA21 8RQ');
   }
 
-  // Ink finder: match a typed printer model against INK_DATA (assets/ink.js)
+  // Ink finder: match a typed printer model against the hand-checked UK list (assets/ink.js, INK_DATA)
+  // plus the larger converted list (assets/ink-db.json), which is fetched the first time someone uses the finder
   const inkForm = document.querySelector('[data-ink-form]');
   if (inkForm && window.INK_DATA) {
     const q = inkForm.querySelector('[data-ink-q]');
@@ -68,14 +69,29 @@
     const mail = emailLink ? emailLink.getAttribute('href').split('?')[0] : '';
     const norm = (t) => t.toLowerCase().replace(/[^a-z0-9]/g, '');
     const esc = (t) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-    const brands = ['hp', 'canon', 'epson', 'brother'];
-    const otherBrands = ['kodak', 'lexmark', 'samsung', 'xerox', 'ricoh', 'kyocera', 'dell', 'oki', 'sharp', 'panasonic', 'konica'];
+    const brands = ['hp', 'canon', 'epson', 'brother', 'samsung'];
+    const otherBrands = ['kodak', 'lexmark', 'xerox', 'ricoh', 'kyocera', 'dell', 'oki', 'sharp', 'panasonic', 'konica'];
+    const makerFinders = {
+      hp: ['HP', 'https://www.hp.com/gb-en/shop/ink-toner-paper'],
+      canon: ['Canon', 'https://www.canon.co.uk/store/'],
+      epson: ['Epson', 'https://www.epson.co.uk/en_GB/inkfinder'],
+      brother: ['Brother', 'https://www.brother.co.uk/supplies'],
+    };
     const index = [];
-    window.INK_DATA.forEach((set) => set.models.forEach((m) => {
-      const full = `${set.brand} ${m}`;
-      const code = m.split(' ').pop();   // e.g. "2720", "XP-2100", "TS5050", "MFC-J491DW"
-      index.push({ set, model: full, key: norm(full), code: norm(code) });
-    }));
+    const known = new Set();
+    function add(sets, skipKnown) {
+      sets.forEach((set) => set.models.forEach((m) => {
+        const full = `${set.brand} ${m}`;
+        const key = norm(full);
+        if (skipKnown && known.has(key)) return;   // the hand-checked UK entry wins
+        known.add(key);
+        const code = m.split(' ').reverse().find((w) => /\d/.test(w)) || m.split(' ').pop();   // "2720", "XP-2100", "M402n"
+        index.push({ set, model: full, key, code: norm(code) });
+      }));
+    }
+    add(window.INK_DATA, false);
+    let bulk = null;
+    const loadBulk = () => bulk || (bulk = fetch('assets/ink-db.json').then((r) => r.json()).then((d) => add(d.sets, true)).catch(() => {}));
 
     function search(text) {
       const t = norm(text);
@@ -86,11 +102,13 @@
       const bare = brand ? t.slice(brand.length) : t;
       // whole words of the query, and neighbouring pairs ("XP 4105" -> "xp4105"), compared with each model code
       const parts = words.concat(words.slice(1).map((w, i) => words[i] + w));
-      const hits = index.filter((e) => (!brand || e.key.startsWith(brand)) &&
-        (e.key.includes(bare) || parts.some((w) => w === e.code || (w.length >= 4 && /\d/.test(w) && e.code.includes(w)))));
-      // one result per cartridge set, closest model names first
+      const pool = index.filter((e) => !brand || e.key.startsWith(brand));
+      const exact = pool.filter((e) => (bare.length >= 6 && e.key.includes(bare)) || parts.includes(e.code));
+      // partial number matches ("3755" in "dj3755e") only when nothing matches exactly
+      const hits = exact.length ? exact : pool.filter((e) => parts.some((w) => w.length >= 4 && /\d/.test(w) && e.code.includes(w)));
+      // one result per cartridge set, exact model matches first
       const bySet = new Map();
-      hits.sort((a, b) => (b.code === bare) - (a.code === bare) || a.model.length - b.model.length).forEach((e) => {
+      hits.sort((a, b) => (parts.includes(b.code) - parts.includes(a.code)) || a.model.length - b.model.length).forEach((e) => {
         if (!bySet.has(e.set)) bySet.set(e.set, []);
         bySet.get(e.set).push(e.model);
       });
@@ -101,8 +119,12 @@
       if (!text) { out.innerHTML = ''; return; }
       const found = search(text);
       if (!found.length) {
-        out.innerHTML = `<div class="ink-none"><p><b>We couldn't find "${esc(text)}" in our list.</b> Check the model on the printer, or ask us. We stock cartridges for far more printers than are listed here.</p>` +
-          (mail ? `<a class="btn btn-ghost" href="${mail}?subject=${encodeURIComponent('Ink for ' + text)}">Ask us about ink for this printer</a>` : '') + '</div>';
+        const t = norm(text);
+        const maker = Object.keys(makerFinders).find((b) => t.startsWith(b));
+        out.innerHTML = `<div class="ink-none"><p><b>We couldn't find "${esc(text)}" in our list.</b> Check the model on the printer, or ask us and we'll look it up.</p><div class="btn-row">` +
+          (mail ? `<a class="btn btn-ghost" href="${mail}?subject=${encodeURIComponent('Ink for ' + text)}">Ask us about ink for this printer</a>` : '') +
+          (maker ? `<a class="btn btn-ghost" href="${makerFinders[maker][1]}" target="_blank" rel="noopener">${makerFinders[maker][0]}'s own UK ink finder</a>` : '') +
+          '</div></div>';
         return;
       }
       out.innerHTML = found.map(([set, models]) => `
@@ -115,7 +137,14 @@
         '<p class="ink-note">Pop in to buy, or email us to check stock first. XL cartridges cost a little more but print far more pages. Please check the code against your old cartridge before buying.</p>';
     }
 
-    inkForm.addEventListener('submit', (e) => { e.preventDefault(); render(q.value.trim()); });
+    inkForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const text = q.value.trim();
+      if (text && !search(text).length) { out.innerHTML = '<p class="ink-note">Searching…</p>'; await loadBulk(); }
+      render(text);
+      loadBulk();
+    });
+    q.addEventListener('focus', loadBulk, { once: true });
     document.querySelectorAll('[data-ink-open]').forEach((a) => a.addEventListener('click', () => setTimeout(() => q.focus(), 300)));
   }
 })();

@@ -164,6 +164,7 @@ address { font-style: normal; }
 .ink-card, .ink-none { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
 .ink-none, .ink-note { grid-column: 1 / -1; }
 .ink-none p { margin: 0 0 12px; }
+.ink-none .btn-row { margin: 0; gap: 10px; }
 .ink-for { margin: 0; font-size: .85rem; color: var(--muted); }
 .ink-card h4 { margin: 2px 0 8px; font-size: 1.15rem; color: var(--ink); }
 .ink-card .ticks { margin-bottom: 14px; }
