@@ -97,8 +97,15 @@ function copyDir(from, to) {
 fs.rmSync(OUT, { recursive: true, force: true });
 copyDir(path.join(SRC, 'assets'), path.join(OUT, 'assets'));
 
+// "assets/x.js" -> "assets/x.js?v=<hash>" so browsers never pair a new page with an old cached file
+const hash = (file) => require('crypto').createHash('sha1').update(fs.readFileSync(path.join(OUT, file))).digest('hex').slice(0, 8);
+const versioned = (text, pattern) => text.replace(pattern, (m, q, file) => `${q}${file}?v=${hash(file)}${q}`);
+const siteJs = path.join(OUT, 'assets', 'site.js');
+fs.writeFileSync(siteJs, versioned(fs.readFileSync(siteJs, 'utf8'), /(['"])(assets\/[\w-]+\.json)\1/g));
+
 for (const file of fs.readdirSync(SRC).filter((f) => f.endsWith('.html'))) {
-  fs.writeFileSync(path.join(OUT, file), render(fs.readFileSync(path.join(SRC, file), 'utf8')));
+  const html = render(fs.readFileSync(path.join(SRC, file), 'utf8'));
+  fs.writeFileSync(path.join(OUT, file), versioned(html, /(")(assets\/[\w-]+\.(?:js|css))"/g));
   console.log('built', file);
 }
 
