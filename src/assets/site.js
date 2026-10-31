@@ -77,21 +77,32 @@
       epson: ['Epson', 'https://www.epson.co.uk/en_GB/inkfinder'],
       brother: ['Brother', 'https://www.brother.co.uk/supplies'],
     };
+    const lines = ['deskjet', 'envy', 'officejet', 'laserjet', 'photosmart', 'pagewide', 'tank', 'pixma', 'maxify', 'sensys', 'ecotank', 'expression', 'workforce'];
+    const stem = (c) => c.replace(/[a-z]+$/, '');   // "m402dn" -> "m402", "2720e" -> "2720"
     const index = [];
     const known = new Set();
     function add(sets, skipKnown) {
       sets.forEach((set) => set.models.forEach((m) => {
         const full = `${set.brand} ${m}`;
         const key = norm(full);
-        if (skipKnown && known.has(key)) return;   // the hand-checked UK entry wins
+        if (skipKnown && known.has(key)) return;   // the first list to name a printer wins
         known.add(key);
-        const code = m.split(' ').reverse().find((w) => /\d/.test(w)) || m.split(' ').pop();   // "2720", "XP-2100", "M402n"
-        index.push({ set, model: full, key, code: norm(code) });
+        const code = m.split(' ').reverse().find((w) => /\d/.test(w)) || '';   // "2720", "XP-2100", "M402n"
+        // a range ("M109 - M112", "3001-3008") or a series ("DeskJet 2700" covers 2700-2799, "OfficeJet Pro 9120" 9120-9129)
+        let range = null;
+        const r = m.match(/\b([A-Z]*)-?(\d+)[a-z]*\s*-\s*[A-Z]*-?(\d+)\b/i);
+        if (r) range = [r[1].toLowerCase(), Number(r[2]), Number(r[3])];
+        else if (/^\d{2}00$/.test(code)) range = ['', Number(code), Number(code) + 99];
+        else if (/^\d{3}0$/.test(code)) range = ['', Number(code), Number(code) + 9];
+        index.push({ set, model: full, key, code: norm(code), range, ia: /ink advantage|\bIA\b/i.test(m) });
       }));
     }
     add(window.INK_DATA, false);
     let bulk = null;
-    const loadBulk = () => bulk || (bulk = fetch('assets/ink-db.json').then((r) => r.json()).then((d) => add(d.sets, true)).catch(() => {}));
+    const getSets = (url) => fetch(url).then((r) => r.json()).then((d) => d.sets).catch(() => []);
+    // manufacturer UK lists first, then the older converted list for everything else
+    const loadBulk = () => bulk || (bulk = Promise.all([getSets('assets/ink-official.json'), getSets('assets/ink-db.json')])
+      .then(([official, older]) => { add(official, true); add(older, true); }));
 
     function search(text) {
       const t = norm(text);
@@ -102,17 +113,37 @@
       const bare = brand ? t.slice(brand.length) : t;
       // whole words of the query, and neighbouring pairs ("XP 4105" -> "xp4105"), compared with each model code
       const parts = words.concat(words.slice(1).map((w, i) => words[i] + w));
-      const pool = index.filter((e) => !brand || e.key.startsWith(brand));
-      const exact = pool.filter((e) => (bare.length >= 6 && e.key.includes(bare)) || parts.includes(e.code));
+      const line = lines.find((l) => t.includes(l));
+      const wantIa = /advantage|\bia\b/.test(text.toLowerCase());
+      const pool = index.filter((e) => (!brand || e.key.startsWith(brand)) && (wantIa || !e.ia));
+      const nums = parts.map((w) => w.match(/^([a-z]*)(\d+)[a-z]*$/)).filter(Boolean);
+      const score = (e) => {
+        if (parts.includes(e.code) || (bare.length >= 6 && e.key.includes(bare))) return 3;
+        if (line && !e.key.includes(line)) return 0;
+        if (parts.some((w) => /\d/.test(w) && stem(w) === stem(e.code) && stem(w).length >= 3)) return 2;
+        if (e.range && nums.some(([, p, n]) => p === e.range[0] && +n >= e.range[1] && +n <= e.range[2])) {
+          // several series can cover a number: prefer more of the typed words ("OfficeJet Pro"), then the narrower range
+          const overlap = words.filter((w) => !/\d/.test(w) && e.model.toLowerCase().split(/\s+/).map(norm).includes(w)).length;
+          return 1 + overlap / 100 - (e.range[2] - e.range[1]) / 1e6;
+        }
+        return 0;
+      };
+      pool.forEach((e) => { e.score = score(e); });
+      const exact = pool.filter((e) => e.score);
       // partial number matches ("3755" in "dj3755e") only when nothing matches exactly
       const hits = exact.length ? exact : pool.filter((e) => parts.some((w) => w.length >= 4 && /\d/.test(w) && e.code.includes(w)));
-      // one result per cartridge set, exact model matches first
+      // one result per cartridge set, best matches first
+      const best = Math.max(...hits.map((e) => e.score || 0));
+      // the same cartridges can come from two lists ("HP 305" and "HP 305 / 305XL"): keyed by brand and first code
+      const family = (set) => `${set.brand} ${set.name.split(/[ /]+/)[1]}`;
       const bySet = new Map();
-      hits.sort((a, b) => (parts.includes(b.code) - parts.includes(a.code)) || a.model.length - b.model.length).forEach((e) => {
-        if (!bySet.has(e.set)) bySet.set(e.set, []);
-        bySet.get(e.set).push(e.model);
+      // a series match only when it is the closest one
+      hits.filter((e) => (e.score || 0) >= (best < 2 ? best : 2)).sort((a, b) => (b.score || 0) - (a.score || 0) || a.model.length - b.model.length).forEach((e) => {
+        const k = family(e.set);
+        if (!bySet.has(k)) bySet.set(k, [e.set, []]);
+        bySet.get(k)[1].push(e.model);
       });
-      return [...bySet.entries()].slice(0, 4);
+      return [...bySet.values()].slice(0, 4);
     }
 
     function render(text) {
@@ -140,7 +171,7 @@
     inkForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const text = q.value.trim();
-      if (text && !search(text).length) { out.innerHTML = '<p class="ink-note">Searching…</p>'; await loadBulk(); }
+      if (text) { out.innerHTML = '<p class="ink-note">Searching…</p>'; await loadBulk(); }
       render(text);
       loadBulk();
     });
