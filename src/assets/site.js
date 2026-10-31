@@ -176,6 +176,10 @@
       loadBulk();
     });
     q.addEventListener('focus', loadBulk, { once: true });
-    document.querySelectorAll('[data-ink-open]').forEach((a) => a.addEventListener('click', () => setTimeout(() => q.focus(), 300)));
+    // the finder stays hidden until someone asks for it
+    const panel = document.getElementById('ink-finder');
+    const openFinder = () => { panel.hidden = false; loadBulk(); setTimeout(() => q.focus(), 300); };
+    document.querySelectorAll('[data-ink-open]').forEach((a) => a.addEventListener('click', openFinder));
+    if (location.hash === '#ink-finder') openFinder();
   }
 })();
